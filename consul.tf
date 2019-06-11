@@ -35,7 +35,7 @@ resource "azurerm_virtual_machine" "consul_vm" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      key_data = tls_private_key.ssh_key.public_key_pem
+      key_data = tls_private_key.ssh_key.public_key_openssh
       path = "/home/${var.admin_username}/.ssh/authorized_keys"
     }
   }
