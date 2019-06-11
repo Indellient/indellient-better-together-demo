@@ -2,4 +2,4 @@
 
 .terraform/
 
-backend.tfvars
+terraform.tfvars
