@@ -15,5 +15,5 @@ data "azurerm_image" "image" {
 }
 
 resource "tls_private_key" "ssh_key" {
-  algorithm   = "ECDSA"
+  algorithm   = "RSA"
 }
