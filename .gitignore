@@ -2,4 +2,6 @@
 
 .terraform/
 
+results/
+
 terraform.tfvars

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+exec 2>&1
+
+exec dockerd -H "unix://{{pkg.svc_var_path}}/run/docker.sock" &
+
+exec nomad agent -config="{{pkg.svc_config_path}}/config.conf"
