@@ -9,10 +9,7 @@ pkg_source="https://releases.hashicorp.com/nomad/${pkg_version}/nomad_${pkg_vers
 pkg_shasum=cbd008dd2f3c622cb931ce8e7e6465f5b683e66845eb70adb776c970a8029578
 pkg_filename="nomad-${pkg_version}_linux_amd64.zip"
 pkg_deps=(
-  core/iptables
-  core/shadow
   core/glibc
-  core/docker
 )
 pkg_build_deps=(
   core/unzip

@@ -4,7 +4,7 @@
 
 [Nomad](https://nomadproject.io) is an easy-to-use, flexible, and performant workload orchestrator.
 
-This plan provides the static binary for execution and the configuration for a Nomad client, with support for the [Docker Driver](https://www.nomadproject.io/docs/drivers/docker.html).
+This plan provides the static binary for execution and the configuration for a Nomad client.
 
 ## Usage
 
