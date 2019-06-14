@@ -45,6 +45,7 @@ resource "azurerm_network_interface" "nomad_server_nic" {
 // In production, typically 3 or 5, but no more than 7 Nomad Servers should exist in a cluster.
 // Connecting the servers to a Consul cluster will allow for automatic bootstrapping.
 // Visit https://nomadproject.io for details.
+// In a hardened environment, include Network Security Groups.
 resource "azurerm_virtual_machine" "nomad_server_vm" {
   connection {
     host        = azurerm_public_ip.nomad_server_public_ip.ip_address
@@ -134,6 +135,7 @@ resource "azurerm_network_interface" "nomad_client_nic" {
   }
 }
 
+// In a hardened environment, include Network Security Groups.
 resource "azurerm_virtual_machine" "nomad_client_vm" {
   connection {
     host        = azurerm_public_ip.nomad_client_public_ip.ip_address
