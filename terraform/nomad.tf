@@ -61,7 +61,7 @@ resource "azurerm_virtual_machine" "nomad_server_vm" {
   }
 
   storage_os_disk {
-    name              = "osdisk"
+    name              = "osdisk-${var.nomad_tag}-server"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -148,7 +148,7 @@ resource "azurerm_virtual_machine" "nomad_client_vm" {
   }
 
   storage_os_disk {
-    name              = "osdisk"
+    name              = "osdisk-${var.nomad_tag}-server"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
