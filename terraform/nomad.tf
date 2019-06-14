@@ -14,7 +14,7 @@ data "template_file" "habitat_service_nomad_client" {
   template = file("templates/hab-sup.service.tpl")
 
   vars = {
-    peers           = "--peer ${azurerm_public_ip.nomad_client_public_ip.ip_address}"
+    peers           = "--peer ${azurerm_public_ip.nomad_server_public_ip.ip_address}"
     ring_name       = var.hab_service_ring_name
   }
 }
@@ -26,7 +26,7 @@ resource "azurerm_public_ip" "nomad_server_public_ip" {
   name                = "${var.nomad_tag}-server-public-ip"
   location            = data.azurerm_resource_group.resource_group.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "nomad_server_nic" {
@@ -42,12 +42,15 @@ resource "azurerm_network_interface" "nomad_server_nic" {
   }
 }
 
+// In production, typically 3 or 5, but no more than 7 Nomad Servers should exist in a cluster.
+// Connecting the servers to a Consul cluster will allow for automatic bootstrapping.
+// Visit https://nomadproject.io for details.
 resource "azurerm_virtual_machine" "nomad_server_vm" {
   connection {
     host        = azurerm_public_ip.nomad_server_public_ip.ip_address
     type        = "ssh"
     user        = var.admin_username
-    private_key = tls_private_key.ssh_key.private_key_pem
+    private_key = trimspace(tls_private_key.ssh_key.private_key_pem)
   }
 
   name                  = "${var.nomad_tag}-server-vm"
@@ -59,6 +62,8 @@ resource "azurerm_virtual_machine" "nomad_server_vm" {
   storage_image_reference {
     id = data.azurerm_image.image.id
   }
+
+  delete_os_disk_on_termination = true
 
   storage_os_disk {
     name              = "osdisk-${var.nomad_tag}-server"
@@ -75,8 +80,8 @@ resource "azurerm_virtual_machine" "nomad_server_vm" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      key_data = tls_private_key.ssh_key.public_key_openssh
-      path = "/home/${var.admin_username}/.ssh/authorized_keys"
+      path      = "/home/${var.admin_username}/.ssh/authorized_keys"
+      key_data  = "${trimspace(tls_private_key.ssh_key.public_key_openssh)} ${var.admin_username}@bettertogether.demo"
     }
   }
 
@@ -113,7 +118,7 @@ resource "azurerm_public_ip" "nomad_client_public_ip" {
   name                = "${var.nomad_tag}-client-public-ip"
   location            = data.azurerm_resource_group.resource_group.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "nomad_client_nic" {
@@ -147,6 +152,8 @@ resource "azurerm_virtual_machine" "nomad_client_vm" {
     id = data.azurerm_image.image.id
   }
 
+  delete_os_disk_on_termination = true
+
   storage_os_disk {
     name              = "osdisk-${var.nomad_tag}-client"
     caching           = "ReadWrite"
@@ -162,9 +169,14 @@ resource "azurerm_virtual_machine" "nomad_client_vm" {
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
-      key_data = tls_private_key.ssh_key.public_key_openssh
-      path = "/home/${var.admin_username}/.ssh/authorized_keys"
+      path      = "/home/${var.admin_username}/.ssh/authorized_keys"
+      key_data  = "${trimspace(tls_private_key.ssh_key.public_key_openssh)} ${var.admin_username}@bettertogether.demo"
     }
+  }
+
+  provisioner "file" {
+    destination = "/tmp/${var.hab_service_name}.service"
+    content     = data.template_file.habitat_service_nomad_client.rendered
   }
 
   provisioner "remote-exec" {
@@ -179,7 +191,7 @@ resource "azurerm_virtual_machine" "nomad_client_vm" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo hab svc load ${var.habitat_origin}/${var.habitat_package_nomad_server} --channel ${var.habitat_channel} --bind ${var.habitat_nomad_server_bind_name}:${var.habitat_package_nomad_server}.${var.habitat_service_group_nomad_server}",
+      "sudo hab svc load ${var.habitat_origin}/${var.habitat_package_nomad_client} --channel ${var.habitat_channel} --bind ${var.habitat_nomad_server_bind_name}:${var.habitat_package_nomad_server}.${var.habitat_service_group_nomad_server}",
     ]
   }
 
