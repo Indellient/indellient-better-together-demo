@@ -47,7 +47,7 @@ resource "azurerm_virtual_machine" "nomad_server_vm" {
     host        = azurerm_public_ip.nomad_server_public_ip.ip_address
     type        = "ssh"
     user        = var.admin_username
-    private_key = tls_private_key.ssh_key.public_key_openssh
+    private_key = tls_private_key.ssh_key.private_key_pem
   }
 
   name                  = "${var.nomad_tag}-server-vm"
@@ -134,7 +134,7 @@ resource "azurerm_virtual_machine" "nomad_client_vm" {
     host        = azurerm_public_ip.nomad_client_public_ip.ip_address
     type        = "ssh"
     user        = var.admin_username
-    private_key = tls_private_key.ssh_key.public_key_openssh
+    private_key = tls_private_key.ssh_key.private_key_pem
   }
 
   name                  = "${var.nomad_tag}-client-vm"
@@ -148,7 +148,7 @@ resource "azurerm_virtual_machine" "nomad_client_vm" {
   }
 
   storage_os_disk {
-    name              = "osdisk-${var.nomad_tag}-server"
+    name              = "osdisk-${var.nomad_tag}-client"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
