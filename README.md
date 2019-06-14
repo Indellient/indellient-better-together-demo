@@ -17,6 +17,8 @@ resource_group_name  = "[Your Azure Resource Group]"
 
 Terraform can now be initialized:
 
+(within the `terraform` directory)
+
 ```
-terraform init -backend-config=backend.tfvars
+terraform init -backend-config=terraform.tfvars
 ```
