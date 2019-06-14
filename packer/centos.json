@@ -44,7 +44,8 @@
         "sudo -E yum install -y yum-utils device-mapper-persistent-data lvm2",
         "sudo -E yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo",
         "sudo -E yum install -y docker-ce",
-        "sudo -E usermod -aG docker root"
+        "sudo -E usermod -aG docker root",
+        "sudo -E systemctl enable docker.service"
       ]
     },
     {
@@ -60,7 +61,7 @@
     {
       "type": "shell",
       "inline": [
-        "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+        "sudo -E /usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
       ],
       "skip_clean": true
     }
