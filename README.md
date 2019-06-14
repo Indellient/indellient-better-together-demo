@@ -1,4 +1,4 @@
-# HashiCorp/Chef/Indellient Better Together Demo
+# Indellient - Better Together Demo
 
 ## Requirements
 
@@ -22,3 +22,7 @@ Terraform can now be initialized:
 ```
 terraform init -backend-config=terraform.tfvars
 ```
+
+## Credits
+
+The directory [habitat/sample-node-app](habitat/sample-node-app) has been copied from https://github.com/habitat-sh/sample-node-app. Only the field `pkg_origin` in the package's [plan.sh](habitat/sample-node-app/habitat/plan.sh) file has been modified.
