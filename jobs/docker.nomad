@@ -2,16 +2,33 @@ job "docker" {
   type = "service"
   datacenters = ["dc1"]
 
-  group "webservice-cache" {
+  group "web" {
     count = 1
 
-    task "webservice" {
+    task "sample-node-app" {
       driver = "docker"
 
       config {
-        image = "redis:3.2"
+        image = "bettertogetherdemo/sample-node-app:latest"
+
+        port_map {
+          http = 8000
+        }
+
         labels {
-          group = "webservice-cache"
+          group = "web"
+        }
+      }
+
+      env {
+        "HAB_LICENSE" = "accept"
+      }
+
+      resources {
+        network {
+          port "http" {
+            static = 8000
+          }
         }
       }
     }
