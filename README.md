@@ -4,7 +4,7 @@
 
 - Azure account configured for an Azure Subscription
 - Terraform 0.12
-- Centos+Habitat Azure VHD's, see: [packer directory](./packer).
+- Centos+Habitat+Docker Azure Images, see: [packer directory](./packer).
 
 ## Initializing Terraform
 

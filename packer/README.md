@@ -1,6 +1,6 @@
 # Packer Configuration
 
-This section is used to create an Azure VHD from Centos 7.6 with Chef Habitat installed.
+This section is used to create an Azure Image from Centos 7.6 with Chef Habitat and Docker installed.
 
 Packer must be [authorized to use Azure](https://www.packer.io/docs/builders/azure-setup.html) in order to create the VHD in question. Once an Azure Subscription, its corresponding policies and Resource Group information is available, the following environment variables must be set:
 
