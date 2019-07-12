@@ -76,6 +76,6 @@ variable "admin_username" {
 
 variable "nomad_tag" {
   type        = string
-  description = "The tag to associate with Consul VMs."
+  description = "The tag to associate with Nomad VMs."
   default     = "nomad"
 }
